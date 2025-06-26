@@ -1,25 +1,21 @@
 # bot.py
 import discord
 from discord.ext import commands, tasks
-import os
+import os # <-- Required for environment variables
 import asyncio
 import logging
 from itertools import cycle
-from config import TOKEN, PREFIX, OWNER_ID
+from config import PREFIX, OWNER_ID # <-- TOKEN is no longer imported
 import json
 
 # --- Alias File Management ---
 ALIAS_FILE = "aliases.json"
 
 def load_aliases():
-    """Loads alias data from the JSON file."""
-    if not os.path.exists(ALIAS_FILE):
-        return {}
+    if not os.path.exists(ALIAS_FILE): return {}
     with open(ALIAS_FILE, 'r') as f:
-        try:
-            return json.load(f)
-        except json.JSONDecodeError:
-            return {}
+        try: return json.load(f)
+        except json.JSONDecodeError: return {}
 
 # --- Custom Bot Class to Handle Aliases ---
 class MehdiBOT(commands.Bot):
@@ -28,24 +24,17 @@ class MehdiBOT(commands.Bot):
         self.aliases_cache = load_aliases()
 
     def reload_aliases(self):
-        """Method to reload the alias cache from the file."""
         self.aliases_cache = load_aliases()
 
     async def get_context(self, message, *, cls=commands.Context):
-        """
-        Overrides the default get_context to check for and apply custom aliases.
-        """
         if message.guild and message.content.startswith(self.command_prefix):
             server_id = str(message.guild.id)
             server_aliases = self.aliases_cache.get(server_id, {})
-
             if server_aliases:
                 potential_alias = message.content[len(self.command_prefix):].split(' ')[0].lower()
-                
                 if potential_alias in server_aliases:
                     real_command = server_aliases[potential_alias]
                     message.content = message.content.replace(potential_alias, real_command, 1)
-
         return await super().get_context(message, cls=cls)
 
 # --- Logging Setup ---
@@ -57,15 +46,11 @@ file_handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s:
 logger.addHandler(handler)
 logger.addHandler(file_handler)
 
-# --- Custom Exception ---
-class DMsNotAllowed(commands.CheckFailure):
-    pass
+class DMsNotAllowed(commands.CheckFailure): pass
 
-# --- Bot Instantiation (Using the custom class) ---
+# --- Bot Instantiation ---
 intents = discord.Intents.default()
-intents.message_content = True
-intents.members = True
-intents.guilds = True
+intents.message_content, intents.members, intents.guilds = True, True, True
 
 bot = MehdiBOT(
     command_prefix=PREFIX,
@@ -82,13 +67,12 @@ async def block_dms(ctx: commands.Context):
     return True
 
 # --- Dynamic Status ---
-status_list = [
-    {"type": "watching", "text": "Developed by Mehdi"},
-    {"type": "listening", "text": "Developed by Mehdi"},
-    {"type": "playing", "text": "Developed by Mehdi"},
+status_cycle = cycle([
+    {"type": "watching", "text": "Over Your server"},
+    {"type": "listening", "text": "Add MEHDI : 0s35"},
+    {"type": "playing", "text": "Mehdi THE DEV"},
     {"type": "streaming", "text": "Developed by Mehdi"}
-]
-status_cycle = cycle(status_list)
+])
 
 @tasks.loop(seconds=15)
 async def change_status():
@@ -107,8 +91,7 @@ async def on_ready():
     logger.info(f"✅ Logged in as {bot.user} (ID: {bot.user.id})")
     logger.info(f"🔗 Invite Link: https://discord.com/oauth2/authorize?client_id={bot.user.id}&permissions=8&scope=bot")
     print("--------------------------------------------------")
-    if not change_status.is_running():
-        change_status.start()
+    if not change_status.is_running(): change_status.start()
 
 @bot.event
 async def on_command_error(ctx: commands.Context, error):
@@ -133,7 +116,13 @@ async def main():
                     logger.info(f"✔️ Successfully loaded cog: {filename[:-3]}")
                 except Exception as e:
                     logger.error(f'❌ Failed to load extension {filename[:-3]}: {e}')
-        await bot.start(TOKEN)
+        
+        # --- UPDATED: Reads token from environment variable ---
+        token = os.environ.get("DISCORD_TOKEN")
+        if not token:
+            logger.error("❌ DISCORD_TOKEN not found in environment variables!")
+            return
+        await bot.start(token)
 
 if __name__ == "__main__":
     try:
