@@ -1,0 +1,16 @@
+2025-06-26 21:42:22,002:INFO:discord: ✔️ Successfully loaded cog: alias
+2025-06-26 21:42:23,033:INFO:discord: ✔️ Successfully loaded cog: chatbot
+2025-06-26 21:42:23,034:INFO:discord: ✔️ Successfully loaded cog: converters
+2025-06-26 21:42:23,035:INFO:discord: ✔️ Successfully loaded cog: gaming
+2025-06-26 21:42:23,037:INFO:discord: ✔️ Successfully loaded cog: leveling
+2025-06-26 21:42:23,039:INFO:discord: ✔️ Successfully loaded cog: moderation
+2025-06-26 21:42:23,238:INFO:discord: ✔️ Successfully loaded cog: music
+2025-06-26 21:42:23,240:INFO:discord: ✔️ Successfully loaded cog: owner
+2025-06-26 21:42:23,242:INFO:discord: ✔️ Successfully loaded cog: reminders
+2025-06-26 21:42:23,633:INFO:discord: ✔️ Successfully loaded cog: translate
+2025-06-26 21:42:23,634:INFO:discord: ✔️ Successfully loaded cog: twentyquestions
+2025-06-26 21:42:23,635:INFO:discord: ✔️ Successfully loaded cog: utility
+2025-06-26 21:42:23,635:INFO:discord.client: logging in using static token
+2025-06-26 21:42:24,972:INFO:discord.gateway: Shard ID None has connected to Gateway (Session ID: d9aeecf8b491e58cac675c0b9ade444b).
+2025-06-26 21:42:26,994:INFO:discord: ✅ Logged in as Mehdi BOT V1.#9208 (ID: 1386790192475672708)
+2025-06-26 21:42:26,994:INFO:discord: 🔗 Invite Link: https://discord.com/oauth2/authorize?client_id=1386790192475672708&permissions=8&scope=bot
